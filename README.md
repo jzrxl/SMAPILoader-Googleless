@@ -41,7 +41,7 @@ and I don't have native libraries for x86/AMD64. Furthermore, I'm not sure Stard
 # 📲 Installation
 1. Download/compile and install [SMAPI Launcher](https://github.com/IvanKr08/SMAPILoader-Googleless/releases).
    Experimental builds are available in [GitHub Actions](https://github.com/IvanKr08/SMAPILoader-Googleless/actions).
-2. Download SMAPI.4.x.x-(xxxx).zip [отсюда](https://github.com/NRTnarathip/SMAPI-Android-1.6/releases)
+2. Download SMAPI.4.x.x-(xxxx).zip [from here](https://github.com/NRTnarathip/SMAPI-Android-1.6/releases)
    **(The author has stopped releasing new SMAPI builds on GitHub, only on the Thai Discord.)**.
 3. Launch SMAPI Launcher.
 4. "Install SMAPI From Zip", then select the file with SMAPI.
