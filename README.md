@@ -1,6 +1,6 @@
 # FORKED FOR ARCHIVE PURPOSES (ENG Translated)
 
-# 📢 Manifest
+# 📢 Note
 I understand, of course. Work should be paid, and piracy is a criminal offense in some countries,
 but mere mortals shouldn't have to suffer because of tilting at windmills. Especially users of Huawei phones without Google Play
 and ideological opponents of Google (I, for example, wouldn't give them a dime even if I could),
