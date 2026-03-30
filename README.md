@@ -19,7 +19,7 @@ just like creating a fork that doesn't do what the original did.
 ![image](https://github.com/user-attachments/assets/09a5f3fa-0b99-4aae-8f47-2de9009d5209)
 
 # 🌟 Features
-- - Send logs to the SMAPI server with one button.
+- Send logs to the SMAPI server with one button.
 - Update SMAPI without reinstalling the game or loader.
 - No labor-intensive manual manipulation required.
 - Support for games installed from the Galaxy Store, Google Play, and via APK.
@@ -38,67 +38,63 @@ The APK is built directly from the contents of this repository in a clean and co
 and I don't have native libraries for x86/AMD64. Furthermore, I'm not sure Stardew Valley even exists for these architectures. But if it does, please share the libraries from the APK.
 
 
-# 📲 Установка
-1. Скачать/собрать и установить [SMAPI Launcher](https://github.com/IvanKr08/SMAPILoader-Googleless/releases).
-   Экспериментальные сборки есть в [GitHub Actions](https://github.com/IvanKr08/SMAPILoader-Googleless/actions).
-2. Скачать SMAPI.4.x.x-(xxxx).zip [отсюда](https://github.com/NRTnarathip/SMAPI-Android-1.6/releases)
-   **(автор перестал выпускать свежие сборки SMAPI в GitHub, только в таиландском Discord)**.
-3. Запустить SMAPI Launcher.
-4. "Install SMAPI From Zip", после чего выбрать архив со SMAPI.
-5. Дождаться "Successfully Install SMAPI".
-6. "Start Game", после чего SMAPI Launcher клонирует игру, внедрит SMAPI и запустит ее.
-7. Убедиться, что игра работает, после чего установить желаемые моды через встроенный менеджер.
+# 📲 Installation
+1. Download/compile and install [SMAPI Launcher](https://github.com/IvanKr08/SMAPILoader-Googleless/releases).
+   Experimental builds are available in [GitHub Actions](https://github.com/IvanKr08/SMAPILoader-Googleless/actions).
+2. Download SMAPI.4.x.x-(xxxx).zip [отсюда](https://github.com/NRTnarathip/SMAPI-Android-1.6/releases)
+   **(The author has stopped releasing new SMAPI builds on GitHub, only on the Thai Discord.)**.
+3. Launch SMAPI Launcher.
+4. "Install SMAPI From Zip", then select the file with SMAPI.
+5. Wait until it says "Successfully Install SMAPI".
+6. "Start Game", After which SMAPI Launcher will clone the game, inject SMAPI and launch it.
+7. Make sure the game is working, then install the desired mods through the built-in manager.
 
-# ‼️ Известные проблемы
-- Новое сохранение *не создается* и появляется сообщение "SMAPI Launcher не отвечает".
-  - Не нажимать на экран после подтверждения создания персонажа, игра может думать вплоть до минуты.
-	Если сообщение всё равно появляется, то сразу после попадания в мир нужно перезапустить игру.
-    Загрузка существующего сохранения требует 5-10 секунд и не вызывает это сообщение.
-- Мод N отключен из-за несовместимости. Обновите мод.
-  - Большая часть модов, которые подписаны как "предназначено для Android",
-    были созданы под мобильный SMAPI для 1.5 и несовместимы с новым форком.
-    Чаще работает версия, которая предназначена для ПК.
-- Мод якобы загружен, но на практике не работает или сыплет ошибками в консоль.
-  - Мобильный SMAPI находится в зачаточном состоянии и некоторые внутренние аспекты игры
-    отличаются от компьютерной версии. Можете написать автору мода с просьбой исправить его,
-    но далеко не факт, что он будет в этом заинтересован/увидит физическую возможность.
-    В противном случае придется либо отказаться от мода, либо исправлять его самостоятельно
-    (после чего патч можно будет предложить автору).
-    Требуется распаковать сборки игры из APK (файл assemblies.blob) и иметь базовые представления о C#,
-    после чего существует 2 варианта:
-      1. Скачать исходный код, подключить зависимости (конкретно StardewValley.dll и StardewModdingAPI.dll)
-         и собрать его.
-      2. Пропатчить несовместимости через dnSpyEx. В целом проще и быстрее, плюс позволяет исправлять моды
-         с закрытым кодом, но несколько устарел и может серьезно напугать количеством непонятных вещей
-         (которые вам не нужны). Еще очень желательно понимать, как работает стековая виртуальная машина,
-         чтобы иметь возможность модифицировать MSIL напрямую. Код из декомпилятора не всегда собирается назад.
-  - Более того, совместимость может ломаться между версий SMAPI. Попробуйте 4.1.&ast;, 4.2.&ast; и 4.3.&ast;.
+# ‼️ Known Issues
+- A new save *isn't created* and the message "SMAPI Launcher is not responding" appears.
+	- Don't tap the screen after confirming character creation; the game may take up to a minute to process.
+	If the message still appears, restart the game immediately after entering the world.
+	Loading an existing save takes 5-10 seconds and doesn't trigger this message.
+- Mod X is disabled due to incompatibility. Please update the mod.
+  - Most mods labeled "designed for Android" were created for mobile SMAPI 1.5 and are incompatible with the new fork.
+	The PC version is more commonly used.
+- The mod supposedly loads, but in practical it doesn't work or throws errors in the console.
+  - Mobile SMAPI is in its development, and some internal aspects of the game differ from the desktop version.
+	You can contact the mod's author with a request to fix it, but it's unlikely they'll be interested or even see the feasibility.
+	Otherwise, you'll have to either abandon the mod or fix it yourself (after which you can offer the patch to the author).
+	You'll need to unpack the game assemblies from the APK (assemblies.blob file) and have a basic understanding of C#.
+After that, there are two options:
+      1. Download the source code, include the dependencies (specifically StardewValley.dll and StardewModdingAPI.dll) and build it.
+      2. Patch incompatibilities with dnSpyEx. It's generally simpler and faster, and it allows you to fix mods
+		with closed source code, but it's somewhat outdated and can be quite intimidating due to the number of obscure features
+		(which you don't need). It's also highly recommended to understand how the stack-based virtual machine works,
+		so you can modify MSIL directly. Code from a decompiler doesn't always recompile.
+  - Moreover, compatibility may break between SMAPI versions. Try 4.1.&ast;, 4.2.&ast; и 4.3.&ast;.
 
-# #️⃣ Связь
-Discord-сервер оригинала - SMAPI Thailand: https://discord.com/invite/ETtycvcJjr
+# #️⃣ Support
+Original Discord server - SMAPI Thailand: https://discord.com/invite/ETtycvcJjr
 
-**Не ожидайте получить там помощь для данного форка. В лучшем случае вам ничего не ответят,
-в худшем могут назвать очень плохими словами и даже забанить**
+**Don't expect to get any help there for this fork. At best, they won't answer you,
+at worst, they might call you very nasty names and even ban you.**
 
-При любых проблемах или вопросах пишите в [Issues](https://github.com/IvanKr08/SMAPILoader-Googleless/issues)
-и [Discussions](https://github.com/IvanKr08/SMAPILoader-Googleless/discussions).
+For any problems or questions, please write to [Issues](https://github.com/IvanKr08/SMAPILoader-Googleless/issues)
+and [Discussions](https://github.com/IvanKr08/SMAPILoader-Googleless/discussions).
 
-Если у вас нет аккаунта GitHub, то на [4PDA](https://4pda.to/forum/index.php?showtopic=945283)
-или [русском сервере Discord](https://discord.gg/XCka9TDaGx).
-В двух последних случаях не забудьте пингануть меня (IvanKr08), ибо я их не читаю просто так.
+If you don't have a GitHub account, then [4PDA](https://4pda.to/forum/index.php?showtopic=945283)
+or [Russian Discord Server](https://discord.gg/XCka9TDaGx).
+In the last two cases, don't forget to ping me (IvanKr08), because I don't just read them.
 
-# 📦 Самостоятельная сборка
-1. Установить .NET SDK 8 и Android SDK (ничего не понимаю в Android, но ваш SDK обязан поддерживать API 29).
-   Android SDK должен быть прописан в переменной ANDROID_HOME. Если вы используете Visual Studio,
-   то нужно установить весь набор для MAUI
-   (по какой-то причине иначе не появляется менеджер SDK, даже если поставить всё отдельно от MAUI).
-2. Клонировать или скачать репозиторий.
-3. Открыть cmd и перейти в папку с репозиторием.
-4. "dotnet workload restore" (нужно 3+ гигабайт свободного места на системном разделе).
+# 📦 Building
+1. Install .NET SDK 8 and the Android SDK (I don't know anything about Android, but your SDK must support API 29).
+	The Android SDK must be specified in the ANDROID_HOME variable. If you're using Visual Studio,
+	you'll need to install the entire MAUI toolchain.
+   (For some reason, the SDK manager doesn't appear, even if you install everything separately from MAUI.).
+2. Clone or download the repository.
+3. Open cmd and go to the repository folder.
+4. "dotnet workload restore" (3+GB of free space on the system partition is required).
 5. "dotnet run --project LibPatcher patch".
-   Это автоматически пропатчит рантайм Mono. Если этого не сделать, то игра откажется запускаться из-за MethodAccessException
-   (если вы не сразу его пропатчили, то обязательно удалите obj и bin перед повторной сборкой). [Больше информации](/LibPatcher).
-6. Помолиться и выполнить "dotnet publish ./SMAPIGameLoader".
-7. Если появились ошибки, то сообщить о них через [Issues](https://github.com/IvanKr08/SMAPILoader-Googleless/issues) или
-   попытаться исправить самостоятельно.
-8. Если сборка завершилась успешно, то можно устанавливать получившийся APK.
+   This will automatically patch the Mono runtime. If you don't do this, the game will fail to launch due to a MethodAccessException.
+(If you didn't patch it immediately, be sure to remove obj and bin before rebuilding.). [More information](/LibPatcher).
+6. Pray and perform "dotnet publish ./SMAPIGameLoader".
+7. If any errors occur, please report them via [Issues](https://github.com/IvanKr08/SMAPILoader-Googleless/issues) or
+	try to fix it yourself.
+8. If the build is successful, you can install the resulting APK.
