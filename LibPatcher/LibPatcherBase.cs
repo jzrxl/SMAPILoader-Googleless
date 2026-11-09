@@ -10,7 +10,7 @@ abstract class LibPatcherBase<T> where T : struct, IUnsignedNumber<T> {
     public string LibFile { get; }
 
     internal LibPatcherBase(string dotnetHome) {
-        var ver = "8.0.22";
+        var ver = "9.0.22";
         LibFile = Path.Combine(dotnetHome, @$"packs\Microsoft.NETCore.App.Runtime.Mono.android-{ArchName}\{ver}\runtimes\android-{ArchName}\native\libmonosgen-2.0.so");
     }
 

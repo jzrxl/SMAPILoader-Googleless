@@ -70,8 +70,8 @@ partial class Program {
         Available actions:
             help                    : help
             silent <another action> : do not wait for user input
-            patch  [dotnet home]    : patch all 8.0.22 runtime archs.
-            revert [dotnet home]    : restore all 8.0.22 runtimes from backup.
+            patch  [dotnet home]    : patch all 9.0.22 runtime archs.
+            revert [dotnet home]    : restore all 9.0.22 runtimes from backup.
 
         [dotnet home] is optional and defaults to "C:\Program Files\dotnet\"
 
