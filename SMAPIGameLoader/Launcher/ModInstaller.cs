@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-
 using SMAPIGameLoader.Tool;
-
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -12,7 +10,7 @@ namespace SMAPIGameLoader.Launcher;
 
 internal static class ModInstaller
 {
-    public static string ModDir = Path.Combine(FileTool.ExternalFilesDir, "Mods");
+    public static string ModsDirPath = Path.Combine(FileTool.ExternalFilesDir, "Mods");
     public static Version GetMinGameVersion(JObject manifest)
     {
         try
@@ -37,7 +35,7 @@ internal static class ModInstaller
     }
     public static bool AssertModISupport(JObject manifest)
     {
-        if (!SMAPIInstaller.IsInstalled)
+        if (SMAPIInstaller.IsInstalled is false)
         {
             ToastNotifyTool.Notify("Can't check mod, please install SMAPI first!!");
             return false;
@@ -117,7 +115,7 @@ internal static class ModInstaller
             var manifestJson = JObject.Parse(manifestText);
             string modName = manifestJson["Name"].ToString();
 
-            ExtractModZipFile(pickFile.FileName, zip, Path.Combine(ModDir));
+            ExtractModZipFile(pickFile.FileName, zip, Path.Combine(ModsDirPath));
             zip.Dispose();
 
             var modVersion = manifestJson["Version"].ToString();
@@ -138,8 +136,6 @@ internal static class ModInstaller
 
             DialogTool.Show("Installed Mod", modLogBuilder.ToString());
             OnInstalledCallback?.Invoke();
-
-            FileTool.ClearCache();
         }
         catch (Exception ex)
         {
@@ -167,11 +163,16 @@ internal static class ModInstaller
         }
         return result;
     }
-    internal static bool TryDeleteMod(string folderPath, bool cleaupParentFolder)
+    internal static bool TryDeleteMod(string folderPath, bool cleaupParentFolder = false)
     {
         try
         {
-            if (!Directory.Exists(folderPath)) return false;
+            // check if is root Mods
+            if (ModsDirPath == folderPath)
+                return false;
+
+            if (Directory.Exists(folderPath) is false)
+                return false;
 
             Directory.Delete(folderPath, true);
 
@@ -179,7 +180,7 @@ internal static class ModInstaller
             if (cleaupParentFolder)
             {
                 var parentDir = Directory.GetParent(folderPath).FullName;
-                if (parentDir != ModDir)
+                if (parentDir != ModsDirPath)
                 {
                     var dirs = Directory.GetDirectories(parentDir);
                     if (dirs.Length == 0)

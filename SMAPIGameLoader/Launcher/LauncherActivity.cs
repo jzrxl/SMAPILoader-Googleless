@@ -1,23 +1,28 @@
-using System;
 using _Microsoft.Android.Resource.Designer;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Android.Views;
 using Android.Widget;
-using SMAPIGameLoader.Tool;
-using Xamarin.Essentials;
 using AndroidX.AppCompat.App;
+using Google.Android.Material.BottomNavigation;
+using SMAPIGameLoader.Launcher.Pages;
+using SMAPIGameLoader.Tool;
+using System;
 using System.Text;
+using Xamarin.Essentials;
+using static Android.Provider.DocumentsContract;
+
 
 namespace SMAPIGameLoader.Launcher;
 
 [Activity(
     Label = "SMAPI Launcher",
     MainLauncher = true,
-    Theme = "@style/AppTheme",
+    Theme = "@style/Theme.Material3.DayNight.NoActionBar",
     AlwaysRetainTaskState = true,
     LaunchMode = LaunchMode.SingleInstance,
-    ScreenOrientation = ScreenOrientation.SensorPortrait
+    ScreenOrientation = ScreenOrientation.FullSensor
 )]
 public class LauncherActivity : AppCompatActivity
 {
@@ -25,12 +30,10 @@ public class LauncherActivity : AppCompatActivity
 
     private static bool IsDeviceSupport => IntPtr.Size == 8;
 
-    protected override void OnCreate(Bundle savedInstanceState)
+    protected override void OnCreate(Bundle? savedInstanceState)
     {
         Instance = this;
         base.OnCreate(savedInstanceState);
-
-        SetContentView(ResourceConstant.Layout.LauncherLayout);
 
         Platform.Init(this, savedInstanceState);
         ActivityTool.Init(this);
@@ -39,7 +42,7 @@ public class LauncherActivity : AppCompatActivity
         AssertRequirement();
 
         //ready
-        OnReadyToSetupLayoutPage();
+        SetupLauncherPage();
         SetDarkMode();
 
         //run utils scripts
@@ -97,7 +100,7 @@ public class LauncherActivity : AppCompatActivity
     private void AssertRequirement()
     {
         //check if 32bit not support
-        if (!IsDeviceSupport)
+        if (IsDeviceSupport is false)
         {
             ToastNotifyTool.Notify("Not support on device 32bit");
             Finish();
@@ -105,91 +108,65 @@ public class LauncherActivity : AppCompatActivity
         }
 
         //Assert Game Requirement
-        if (!AssetGameVerify())
+        if (AssetGameVerify() == false)
         {
             Finish();
             return;
         }
     }
 
-    private void OnReadyToSetupLayoutPage()
+    private const int HomeId = 1;
+    private const int ModsId = 2;
+
+    private FrameLayout _container = null!;
+    private View _homePage = null!;
+    private ModManagerPage _modPage = null!;
+    private BottomNavigationView _nav = null!;
+
+    private void SetupLauncherPage()
     {
+        _container = new FrameLayout(this);
+        _container.LayoutParameters = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MatchParent, 0, 1f);
 
-        //setup bind events
-        try
+        _homePage = new HomePage(this);
+        _modPage = new ModManagerPage(this);
+        _container.AddView(_homePage);
+        _container.AddView(_modPage);
+
+        // Bottom navigation อยู่ล่างสุด
+        _nav = new BottomNavigationView(this);
+        _nav.SelectedItemId = HomeId;
+        _nav.Menu.Add(0, HomeId, 0, "Home").SetIcon(Android.Resource.Drawable.IcMenuMyCalendar);
+        _nav.Menu.Add(0, ModsId, 1, "Mods").SetIcon(Android.Resource.Drawable.IcMenuAgenda);
+        _nav.ItemSelected += (s, e) =>
         {
-            FindViewById<Button>(ResourceConstant.Id.InstallSMAPIZip).Click += SMAPIInstaller.OnClickInstallSMAPIZip;
-            FindViewById<Button>(ResourceConstant.Id.UploadLog).Click += LogParser.OnClickUploadLog;
-            //Work In Progress
-            //FindViewById<Button>(ResourceConstant.Id.SaveImportFromSavesZip).Click += SaveManager.OnClickImportSaveZip;
-
-            var startGameBtn = FindViewById<Button>(ResourceConstant.Id.StartGame);
-            startGameBtn.Click += (sender, e) => { OnClickStartGame(); };
-            var modManagerBtn = FindViewById<Button>(ResourceConstant.Id.ModManagerBtn);
-            modManagerBtn.Click += (sender, e) => { ActivityTool.SwapActivity<ModManagerActivity>(this, false); };
-
-            SMAPIInstaller.OnInstalledSMAPI += NotifyInstalledSMAPIInfo;
-        }
-        catch (Exception ex)
-        {
-            ToastNotifyTool.Notify("Error: Try to setup bind UI Event");
-            ErrorDialogTool.Show(ex);
-            return;
-        }
-
-        //set launcher text info
-        try
-        {
-            var launcherInfoLines = new StringBuilder();
-            //set app version
-            launcherInfoLines.AppendLine("Launcher Version: " + AppInfo.VersionString);
-
-            var buildDateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(int.Parse(AppInfo.BuildString));
-            var localDateTimeOffset = buildDateTimeOffset.ToLocalTime();
-            var localDateTimeString = localDateTimeOffset.ToString("HH:mm:ss dd/MM/yyyy");
-            launcherInfoLines.AppendLine($"Build: {localDateTimeString} (d/m/y)");
-
-            //set support game version
-            launcherInfoLines.AppendLine($"Support Game Version: {StardewApkTool.GameVersionSupport} Or Later");
-            launcherInfoLines.AppendLine("Your Game Version: " + StardewApkTool.CurrentGameVersion);
-            launcherInfoLines.AppendLine("Discord: Stardew SMAPI Thailand");
-            launcherInfoLines.AppendLine("Owner: NRTnarathip");
-			launcherInfoLines.AppendLine("Googleless Patch: IvanKr08");
-			launcherInfoLines.AppendLine($"Game Package: {StardewApkTool.CurrentPackageInfo}");
-			launcherInfoLines.AppendLine($"Split Content: {StardewApkTool.IsSplitContent}");
-			launcherInfoLines.AppendLine($"Content Apk Path: {StardewApkTool.ContentApkPath}");
-			
-            FindViewById<TextView>(ResourceConstant.Id.launcherInfoTextView).Text = launcherInfoLines.ToString();
-
-        }
-        catch (Exception ex)
-        {
-            ToastNotifyTool.Notify("Error:Try setup app text info: " + ex);
-            ErrorDialogTool.Show(ex);
-        }
-
-        //init ui info
-        NotifyInstalledSMAPIInfo();
+            ShowPage(e.Item!.ItemId);
+            e.Handled = true;
+        };
 
 
+        // Root: แนวตั้ง ใช้เต็มจอ
+        var root = new LinearLayout(this) { Orientation = Orientation.Vertical };
+        root.LayoutParameters = new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MatchParent,
+            ViewGroup.LayoutParams.MatchParent);
+
+        root.AddView(_container);
+        root.AddView(_nav);
+        SetContentView(root);
+
+        // run first page
+        ShowPage(HomeId);
     }
 
-    private void NotifyInstalledSMAPIInfo()
+    private void ShowPage(int itemId)
     {
-        var smapiInstallInfo = FindViewById<TextView>(ResourceConstant.Id.SMAPIInstallInfoTextView);
-        if (!SMAPIInstaller.IsInstalled)
-        {
-            smapiInstallInfo.Text = "Please install SMAPI!!";
-            return;
-        }
-
-        var lines = new StringBuilder();
-        lines.AppendLine($"SMAPI Version: {SMAPIInstaller.GetCurrentVersion()}");
-        lines.AppendLine($"SMAPI Build: {SMAPIInstaller.GetBuildCode()}");
-        smapiInstallInfo.Text = lines.ToString();
+        _homePage.Visibility = itemId == HomeId ? ViewStates.Visible : ViewStates.Gone;
+        _modPage.Visibility = itemId == ModsId ? ViewStates.Visible : ViewStates.Gone;
     }
 
-    private void OnClickStartGame()
+    public void OnClickStartGame()
     {
         Console.WriteLine("On click start game");
         EntryGame.LaunchGameActivity(this);
